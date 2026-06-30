@@ -29,33 +29,9 @@ source .venv/bin/activate
 pip install -r requirements.txt
 ```
 
-If you use `pyenv`, activate a compatible Python first, for example:
+## Run 
 
-```bash
-pyenv shell 3.8.20
-```
-
-If you want to use the optional MCMC update paths in `learning/`, install a Stan-compatible Python package separately. The default `requirements.txt` covers the importance-sampling workflow.
-
-## Run A Small Local Test
-
-Start with a dry run:
-
-```bash
-python run_dp_exp.py \
-  --temperature 0.2 \
-  --iterations 2 \
-  --repetitions 1 \
-  --mode sequential \
-  --particles 100 \
-  --cost 1 \
-  --dataset adult \
-  --interaction curve \
-  --curve gompertz \
-  --dry-run
-```
-
-Then run it locally with Weights & Biases disabled:
+Run it locally with Weights & Biases disabled:
 
 ```bash
 python run_dp_exp.py \
