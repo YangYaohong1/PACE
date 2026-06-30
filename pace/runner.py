@@ -22,7 +22,6 @@ class RunConfig:
     dataset: str
     interaction: str
     curve: str
-    wandb_mode: str | None = None
     task_id: int | None = None
     cpus_per_task: int | None = None
 
@@ -87,8 +86,6 @@ def run_experiment(
 
     command = build_command(repo_root, config)
     env = os.environ.copy()
-    if config.wandb_mode:
-        env["WANDB_MODE"] = config.wandb_mode
     if config.task_id is not None:
         env["SLURM_ARRAY_TASK_ID"] = str(config.task_id)
     if config.cpus_per_task is not None:

@@ -5,7 +5,6 @@ parent_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.append(parent_dir)
 from .pareto_front_learning import *
 from .sigmoid_utils import SigmoidParameterHandler
-import wandb
 import pickle
 import datetime
 import numpy as np
@@ -69,33 +68,12 @@ class Experiments:
         self.optimal_accuracy = self.true_accuracy[np.argmax(Utility)]
 
         # Initialize and run experiment
-        wandb.login()
-        run = wandb.init(
-            # project='synthetic-data',
-            project='exp2',
-            entity='yaohong-yang-aalto-university',
-            # name=f"experiment_{task_id}",
-            config={
-                'mode': self.mode,
-                'flag': 'IS',
-                'particles': self.particles,
-                'simulations': self.simulations,
-                'cost_pl': self.cost_pl,
-                'noise': self.noise,
-                'T': self.T,
-                'task_id': self.task_id,
-                'utility': self.utility_function,
-                'acquisition': self.acquisition,
-                'results': 'new'
-
-            },
-            resume="never")
 
 
     def setup_directories(self):
         """Setup directories for storing experiment data"""
         timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
-        self.data_dir = f'experiments_{self.mode}/T_{self.T}_num_iteration_{self.num_iteration}_num_repetition_{self.num_repetition}_particles_{self.particles}_simulations_{self.simulations}_noise_{self.noise}_cost_{self.cost_pl}/{self.task_id}_{timestamp}'
+        self.data_dir = f'experiments_{self.mode}/num_iteration_{self.num_iteration}_num_repetition_{self.num_repetition}_particles_{self.particles}_simulations_{self.simulations}/{self.task_id}_{timestamp}'
         if not os.path.exists(self.data_dir):
             os.makedirs(self.data_dir, exist_ok=True)
 
@@ -219,18 +197,6 @@ class Experiments:
             print('preference error', self.errors_ozaki)
             print('regret:', self.regrets)
             print('------------------------------------')
-
-            wandb.log({
-                f'error_PL': error_ozaki,
-                f'regret': regret,
-                f'acq_value_pl': best_acq_value_pl,
-                f'acq_value_bo': best_acq_value_bo,
-                f'flag_pl': flag_pl,
-                f'prop_pl': num_pl / max(num_pl + num_bo, 1),
-                f'switch': Acq_update.count_switches(self.flags),
-                f'duplicates': duplicates,
-                f'duplicates_sum': duplicates_sum,
-            })
 
         # Save the data
         output_data = {

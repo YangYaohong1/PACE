@@ -5,5 +5,4 @@ scipy
 scikit-learn
 joblib
 torch
-wandb
 tueplots

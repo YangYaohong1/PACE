@@ -29,9 +29,7 @@ source .venv/bin/activate
 pip install -r requirements.txt
 ```
 
-## Run 
-
-Run it locally with Weights & Biases disabled:
+## Run
 
 ```bash
 python run_dp_exp.py \
@@ -43,8 +41,7 @@ python run_dp_exp.py \
   --cost 1 \
   --dataset adult \
   --interaction curve \
-  --curve gompertz \
-  --wandb-mode disabled
+  --curve gompertz
 ```
 
 Run outputs are written to `results_DP/`, and launch manifests are written to `runs/`.

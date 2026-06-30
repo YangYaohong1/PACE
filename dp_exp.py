@@ -13,7 +13,6 @@ from learning.pareto_front_learning import *
 from learning.experiments import Acq_update
 from learning.pairwise.separate_preference import pair_pl_update
 from learning.sigmoid_utils import SigmoidParameterHandler
-import wandb
 import pickle
 import datetime
 import numpy as np
@@ -184,34 +183,6 @@ class dp_exp:
                 self.optimal_accuracy = self.true_accuracy[np.argmax(self.All_true_Utility)]
         # self.optimal_epsilon_orig = self.epsilons[np.argmax(Utility)]
 
-        # Initialize and run experiment
-        if os.getenv('WANDB_MODE') not in {'disabled', 'offline'}:
-            wandb.login()
-        run = wandb.init(
-            project='DP_ablation_q',
-            entity='yaohong-yang-aalto-university',
-            # name=f"experiment_{task_id}",
-            config={
-                'mode': self.mode,
-                'flag': 'IS',
-                'particles': self.particles,
-                'simulations': self.simulations,
-                'cost_pl': self.cost_pl,
-                'T': self.T,
-                'task_id': self.task_id,
-                'utility': self.utility_function,
-                'acquisition': self.acquisition,
-                # 'epsilon_min': epsilon_min,
-                # 'epsilon_max': epsilon_max,
-                'dataset': self.dataset,
-                'interaction': self.interaction,
-                'true_w': w_1,
-                'sigmoid_type':self.curve,
-                'num_q': num_q
-
-
-            },
-            resume="never")
 
     def setup_directories(self):
         """Setup directories for storing experiment data"""
@@ -396,20 +367,6 @@ class dp_exp:
             print('regret_evaluated:', self.regrets_evaluated)
             print('utility:',self.utilities)
             print('------------------------------------')
-
-            wandb.log({
-                f'error_PL': error_ozaki,
-                f'utility': utility,
-                f'regret': regret,
-                f'regret_observed': regret_evaluated,
-                f'acq_value_pl': best_acq_value_pl,
-                f'acq_value_bo': best_acq_value_bo,
-                # f'flag_pl': flag_pl,
-                # f'prop_pl': num_pl / max(num_pl + num_bo, 1),
-                # f'switch': Acq_update.count_switches(self.flags),
-                # f'duplicates': duplicates,
-                # f'duplicates_sum': duplicates_sum,
-            })
 
         # Save the data
         output_data = {
@@ -597,5 +554,4 @@ def main():
 
 if __name__ == "__main__":
     main()
-
 

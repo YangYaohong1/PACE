@@ -6,7 +6,6 @@ from ..preference_learning import AcquisitionFunctionsPL, UtilityFunctions, Sigm
 from .preference_learning_pairwise import *
 from ..experiments import Acq_update
 import pickle
-import wandb
 import numpy as np
 
 
@@ -68,19 +67,7 @@ class Experiments:
         self.optimal_utility = np.max(Utility)
         self.optimal_epsilon = self.epsilon_range[np.argmax(Utility)]
 
-        # Initialize and run experiment
-        wandb.login()
-        run = wandb.init(
-            project='final-pairwise',
-            entity='yaohong-yang-aalto-university',
-            # name=f"experiment_{task_id}",
-            config={
-                'Acquisition': self.acquisition,
-                'interaction': self.interaction,
-                # 'points': 'random',
-                'T': self.T,
-            },
-            resume="never")
+
 
     def setup_directories(self):
         """Setup directories for storing experiment data"""
@@ -140,11 +127,6 @@ class Experiments:
             print(f'true w: {self.true_w}')
             # print('acq_value_pl:', best_acq_value_pl)
             print(f'Error in PL: {self.errors_ozaki}')
-
-            wandb.log({
-                f'error_PL': error_ozaki,
-                # f'acq_value_pl': best_acq_value_pl,
-            })
 
         # Save the data
         output_data = {

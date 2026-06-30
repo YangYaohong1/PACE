@@ -43,12 +43,8 @@ def build_parser() -> argparse.ArgumentParser:
         help="Directory containing normalized dataset exports from collect_data.py.",
     )
     parser.add_argument(
-        "--wandb-mode",
-        choices=["online", "offline", "disabled"],
-        default="disabled",
-        help="Value to pass through as WANDB_MODE for safer local runs.",
+        "--task-id", type=int, default=0, help="Optional SLURM_ARRAY_TASK_ID override."
     )
-    parser.add_argument("--task-id", type=int, default=0, help="Optional SLURM_ARRAY_TASK_ID override.")
     parser.add_argument("--cpus-per-task", type=int, default=None, help="Optional SLURM_CPUS_PER_TASK override.")
     parser.add_argument("--skip-collect", action="store_true", help="Skip dataset export before running.")
     parser.add_argument("--dry-run", action="store_true", help="Print resolved paths and command without executing.")
@@ -71,7 +67,6 @@ def main() -> None:
         dataset=args.dataset,
         interaction=args.interaction,
         curve=args.curve,
-        wandb_mode=args.wandb_mode,
         task_id=args.task_id,
         cpus_per_task=args.cpus_per_task,
     )
