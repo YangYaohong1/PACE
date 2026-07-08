@@ -10,6 +10,19 @@ import datetime
 import numpy as np
 
 
+def fmt4(value):
+    """Format numeric values for concise console logs without changing saved data."""
+    if isinstance(value, (list, tuple)):
+        return "[" + ", ".join(fmt4(v) for v in value) + "]"
+    if isinstance(value, np.ndarray):
+        return fmt4(value.tolist())
+    if isinstance(value, np.generic):
+        value = value.item()
+    if isinstance(value, (float, int)):
+        return f"{value:.4f}"
+    return value
+
+
 class Experiments:
     def __init__(self, T, num_iteration, num_repetition, mode, simulations, particles, noise, cost, curve):
         """Initialize experiment parameters"""
@@ -267,7 +280,7 @@ class Acq_update:
 
         best_params = best_params[0]
         action = action[0]
-        print('action:', action)
+        print('action:', fmt4(action))
         probs_weights, error_ozaki = UpdatePreference.preference_update(
             best_params,
             action,

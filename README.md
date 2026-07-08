@@ -29,6 +29,13 @@ source .venv/bin/activate
 pip install -r requirements.txt
 ```
 
+Alternatively, create a Conda environment from the pinned environment file:
+
+```bash
+conda env create -f environment.yml
+conda activate pace
+```
+
 ## Run
 
 ```bash

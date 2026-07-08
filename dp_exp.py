@@ -21,6 +21,19 @@ from sklearn.gaussian_process import GaussianProcessRegressor
 from sklearn.gaussian_process.kernels import RBF, ConstantKernel
 
 
+def fmt4(value):
+    """Format numeric values for concise console logs without changing saved data."""
+    if isinstance(value, (list, tuple)):
+        return "[" + ", ".join(fmt4(v) for v in value) + "]"
+    if isinstance(value, np.ndarray):
+        return fmt4(value.tolist())
+    if isinstance(value, np.generic):
+        value = value.item()
+    if isinstance(value, (float, int)):
+        return f"{value:.4f}"
+    return value
+
+
 class dp_exp:
     def __init__(self, T, num_iteration, num_repetition, mode, particles, cost, dataset, interaction, curve):
         """Initialize experiment parameters"""
@@ -62,7 +75,7 @@ class dp_exp:
         sample = np.random.dirichlet(alpha)
         # Extract w_1 and w_2
         self.true_w = sample
-        print('true_w:', self.true_w)
+        print('true_w:', fmt4(self.true_w))
         w_1, w_2 = sample
 
         grid_w1 = np.linspace(0.01, 0.99, 100)
@@ -242,7 +255,7 @@ class dp_exp:
                         best_params, best_acq_value_pl = Acq_update.calculate_acq_pl(self, i)
                         if self.acquisition == 'kg-IS':
                             best_params = np.array([best_params])
-                        print('best_params:', best_params)
+                        print('best_params:', fmt4(best_params))
                         self.probs_weights, error_ozaki = Acq_update.update_pl(self, best_params)
                     elif i%2 == 0:
                         print('This step we choose Pareto Front Learning.')
@@ -302,7 +315,7 @@ class dp_exp:
                     # pick the next point to evaluate and update the Pareto front
                     best_epsilon, best_acq_value_bo = Acq_update.calculate_acq_pfl(self, i)
                     if best_acq_value_pl/self.cost_pl > best_acq_value_bo:
-                        print('This step we choose Preference Learning.')
+                        print('This step we conduct Preference Learning.')
                         flag_pl = 1
                         num_pl += 1
                         self.flags.append(flag_pl) 
@@ -312,7 +325,7 @@ class dp_exp:
                             error_ozaki = pair_pl_update.pair_update_error(self, best_pair[0], best_pair[1],
                                                                            best_pair[2], best_pair[3])
                     else:
-                        print('This step we choose Pareto Front Learning.')
+                        print('This step we conduct Pareto Front Learning.')
                         flag_pl = 0
                         num_bo += 1
                         self.flags.append(flag_pl)  # Store the flag
@@ -358,14 +371,9 @@ class dp_exp:
             duplicates = len(unique_values[counts > 1])
             duplicates_sum = sum(counts) - len(unique_values)
 
-            print('------------------------------------')
-            print(f'Evaluated epsilons: {self.evaluated_epsilons}')
-            print(f'duplicates_sum:', duplicates_sum)
-            print(f'prop_pl:', num_pl / max(num_pl + num_bo, 1))
-            print('preference error', self.errors_ozaki)
-            print('regret:', self.regrets)
-            print('regret_evaluated:', self.regrets_evaluated)
-            print('utility:',self.utilities)
+            print(f'Evaluated epsilons: {fmt4(self.evaluated_epsilons)}')
+            print('preference error', fmt4(self.errors_ozaki))
+            print('regret:', fmt4(self.regrets))
             print('------------------------------------')
 
         # Save the data
@@ -468,16 +476,10 @@ class dp_update:
         regret_evaluated = float(self.optimal_utility - evaluated_utility)
 
         if i != 0 and i !=1:
-            print('---------')
-            # print('grid_weights:', self.grid_weights)
-            # print('ture chosen utility:', utility)
-            print('max estimated utility:', np.max(self.estimated_utilities))
-            # print('ture chosen accuracy:', accuracy_max)
-            print('optimal utility:', self.optimal_utility)
-            print('chosed epsilon-kg:', self.epsilon_max)
-            print('chosed epsilon-evaluated:', self.evaluated_epsilon_max)
-            print('optimal epsilon:', self.optimal_epsilon)
-            print('----------')
+            print('------------------------------------')
+            print('Estimated optimal epsilon:', fmt4(self.epsilon_max))
+            print('Oracle optimal epsilon:', fmt4(self.optimal_epsilon))
+            print('------------------------------------')
 
         return utility, regret, regret_evaluated
 
@@ -554,4 +556,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
