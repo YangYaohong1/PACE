@@ -11,15 +11,6 @@ Code for the paper: *An Interactive Framework for Finding the Optimal Trade-off 
 - `collect_data.py`: exports normalized dataset views for inspection.
 - `run_dp_exp.py`: validates arguments and runs `dp_exp.py` from this folder.
 
-## Supported Datasets
-
-- `adult`
-- `dutch`
-- `cifar100`
-- `dpdl-benchmark/patch_camelyon`
-- `dpdl-benchmark/sun397`
-- `dpdl-benchmark/svhn_cropped`
-
 ## Install
 
 ```bash
