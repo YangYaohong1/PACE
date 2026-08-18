@@ -1,6 +1,6 @@
 # PACE
 
-Code for the paper: *An Interactive Framework for Finding the Optimal Trade-off in Differential Privacy*
+Code for the paper: *An Interactive Framework for Finding the Preferred Trade-off in Differential Privacy*
 
 ## What Is Included
 
@@ -43,3 +43,16 @@ python run_dp_exp.py \
 ```
 
 Run outputs are written to `results_DP/`, and launch manifests are written to `runs/`.
+
+## Citation
+
+If this repository is useful in your research, please cite:
+
+```bibtex
+@article{yang2026multi,
+  title={An Interactive Framework for Finding the Preferred Trade-off in Differential Privacy},
+  author={Yaohong Yang, Aki Rehn, Sammie Katt, Antti Honkela and Samuel Kaski},
+  journal={Transactions on Machine Learning Research},
+  year={2026}
+}
+```
